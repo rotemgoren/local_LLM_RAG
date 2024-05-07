@@ -155,7 +155,7 @@ def retrieveRelevantResources(query: str,embeddings: torch.tensor,pages_and_chun
     for score, idx in zip(scores, indexs):
         print(f"Score: {score:.4f}")
         print("Text:")
-        print_wrapped(pages_and_chunks[idx]["sentence_chunk"])
+        printWrapped(pages_and_chunks[idx]["sentence_chunk"])
         print(f"Page number: {pages_and_chunks[idx]['page_number']}")
         print("\n")
 
@@ -270,12 +270,18 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
 
-    parser.add_argument('-pdf_path', type=str, default='C:/Users/STL-LAPTOP/Downloads/Human-Nutrition-2020-Edition-1598491699.pdf',
-                        help='Magnetic Field Model 0-Free space 1-Full conductive space 2-Half conductive space')
+    parser.add_argument('--pdf_path', type=str, default='C:/Users/STL-LAPTOP/Downloads/Human-Nutrition-2020-Edition-1598491699.pdf',
+                        help='path to the pdf file')
+
+    parser.add_argument('--make_db_embedding', type=bool,
+                        default=True,
+                        help='making Embedding space for the local data base')
 
     args = parser.parse_args()
 
-    makeDataBaseEmbeddingSpace(args.pdf_path)
+    # 1. making Embedding space for the local data base
+    if args.make_db_embedding:
+        makeDataBaseEmbeddingSpace(args.pdf_path)
 
 
     # load the embedding database
@@ -287,10 +293,9 @@ if __name__ == "__main__":
     embedding_model = SentenceTransformer(model_name_or_path="all-mpnet-base-v2",
                                           device=device)
 
-    #make sementic search
 
     # 1.Define a query string.
-    query = "What are the macronutrients, and what roles do they play in the human body?"
+    query = input("Enter your question:") #e.g What are the macronutrients, and what roles do they play in the human body?"
     # scores,indexs = retrieveRelevantResources(query,embeddings,pages_and_chunks,
     #                          embedding_model ,n_resources_to_return=5,print_time=True)
 
